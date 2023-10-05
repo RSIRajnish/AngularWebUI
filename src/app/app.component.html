@@ -1,0 +1,56 @@
+
+<div class="container-fluid mt-3">
+  <h4>Top Headlines</h4>
+  <div class="list row">
+    <div class="col-md-8">
+      <div class="input-group mb-3 ">
+        <input
+          type="search"
+          class="form-control me-1"
+          placeholder="Search by title"
+          [(ngModel)]="searchText"
+          (search)="onSearch()"
+        />
+        <div class="input-group-append">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="onSearch()">
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+  <table class="table-height">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let data of topHeadlinesData
+            | paginate
+              : {
+                itemsPerPage:pageSize,
+                currentPage: pagination,
+                totalItems: totalStories
+              };
+          let i = index
+        "
+      >
+        <td class="col-md-6" scope="row">{{ data.title }}</td>
+        <td class="col-md-6"> <a href="{{ data.url }}">{{ data.url }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div >
+<div class="d-flex justify-content-center">
+      <pagination-controls
+      (pageChange)="renderPage($event)"
+    ></pagination-controls>
+  </div>>
+  </div>
