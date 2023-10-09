@@ -3,54 +3,46 @@
   <h4>Top Headlines</h4>
   <div class="list row">
     <div class="col-md-8">
-      <div class="input-group mb-3 ">
+      <div class="input-group mb-3">
         <input
           type="search"
-          class="form-control me-1"
+          class="form-control"
           placeholder="Search by title"
-          [(ngModel)]="searchText"
-          (search)="onSearch()"
+          (keyup)="onSearch($any($event.target).value)"
         />
-        <div class="input-group-append">
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            (click)="onSearch()">
-            Search
-          </button>
-        </div>
       </div>
     </div>
     <div class="table-wrap">
-  <table class="table-height">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>URL</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        *ngFor="
-          let data of topHeadlinesData
-            | paginate
-              : {
-                itemsPerPage:pageSize,
-                currentPage: pagination,
-                totalItems: totalStories
-              };
-          let i = index
-        "
+    <div class="mat-elevation-z8 table-wrap">
+      <div class="table-container">
+      <table mat-table [dataSource]="dataSource">
+    
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+        </ng-container>
+    
+        <!-- URL Column -->
+        <ng-container matColumnDef="url">
+          <th mat-header-cell *matHeaderCellDef> URL </th>
+          <td mat-cell *matCellDef="let element"><a target="_blank" href="{{element.url}}">{{element.url}}</a>  </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-progress-spinner style="margin:0 auto;" *ngIf="inProgress"
+      class="example-margin"
+      mode="indeterminate" color="primary"
       >
-        <td class="col-md-6" scope="row">{{ data.title }}</td>
-        <td class="col-md-6"> <a href="{{ data.url }}">{{ data.url }}</a></td>
-      </tr>
-    </tbody>
-  </table>
-</div >
-<div class="d-flex justify-content-center">
-      <pagination-controls
-      (pageChange)="renderPage($event)"
-    ></pagination-controls>
-  </div>>
+  </mat-progress-spinner>
+    </div>
+      <mat-paginator #paginator [pageSize]="pagingSize" [length]="totalRecords"
+                     showFirstLastButtons
+                     aria-label="Select page of periodic elements" class="position-fixed"
+                     style="bottom:0;right:20px">
+      </mat-paginator>
+    </div>
   </div>
+</div>

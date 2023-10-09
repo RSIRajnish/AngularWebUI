@@ -30,19 +30,10 @@ describe('AppComponent', () => {
   });
 
   it(`topHeadlinesData has default value`, () => {
-    expect(component.topHeadlinesData).toEqual([]);
+    expect(component.topHeadlinesData.newsModels).toEqual([]);
   });
-
-  it(`_topHeadlinesData has default value`, () => {
-    expect(component._topHeadlinesData).toEqual([]);
-  });
-
   it(`pagination has default value`, () => {
     expect(component.pagination).toEqual(1);
-  });
-
-  it(`title has default value`, () => {
-    expect(component.title).toEqual(`Headlines`);
   });
 
   it(`pageNumber has default value`, () => {

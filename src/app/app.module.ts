@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NewsApiService } from './Service/news-api.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule } from '@angular/forms';
 import { HttpInterceptorService } from './http/http-interceptor.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -15,9 +18,11 @@ import { HttpInterceptorService } from './http/http-interceptor.service';
   imports: [
     BrowserModule,
     HttpClientModule,
-    BrowserAnimationsModule,
     FormsModule,
-    NgxPaginationModule
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,MatProgressSpinnerModule
   ],
   providers: [NewsApiService,
     {

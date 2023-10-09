@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { NewsApiService } from './Service/news-api.service';
-import { News } from './models/News';
-import { NumberFormatStyle } from '@angular/common';
-
+import { News ,NewsResponse} from './models/News';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-root',
@@ -10,39 +10,42 @@ import { NumberFormatStyle } from '@angular/common';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent {
-  topHeadlinesData: News[] = [];
-  _topHeadlinesData: News[]= [];
+export class AppComponent implements AfterViewInit{
+  topHeadlinesData: NewsResponse = {newsModels:[], recordCount: 0};
   pagination: number = 1;
-  pageSize:number=200;
-  indexSize:number=20;
-  totalStories: number =500;
-  title = 'Headlines';
-  searchText = "";
-  oldSearchText = " "; // one space so that for first time, this is not equal to searchText
   pageNumber:number=1;
   inProgress: boolean = false;
+  displayedColumns: string[] = ['title', 'url'];
+  dataSource!: MatTableDataSource<News>;
+  @ViewChild(MatPaginator)paginator!: MatPaginator;
+  totalRecords:number = 200;
+  pagingSize:number = 10
+
   constructor(private newsapi: NewsApiService) {
-    console.log('app component constructor called');
+    this.dataSource = new MatTableDataSource(this.topHeadlinesData.newsModels);
+  }
+
+  ngAfterViewInit(): void {
+      this.dataSource.paginator = this.paginator;
   }
 
   loadNews() {
      this.inProgress = true;
-     
-     if(this.searchText !=""){
-      this.indexSize =50;
-     }
-     for(let i=0;i<= this.indexSize; i++) {
+     for(let i=0;i<=20;i++) {
         this.pagination = i*10;
         this.getNewsChunk();
      }
   }
 
   getNewsChunk(){
-    this.newsapi.getNews(this.pageNumber, this.pagination, this.searchText)
+    this.newsapi.getNews(this.pageNumber, this.pagination, this.totalRecords)
     .subscribe({
-      next: (response: News[]) => {
-        this.topHeadlinesData =  this.topHeadlinesData.concat(response);
+      next: (response: NewsResponse) => {
+        let data = this.dataSource.data;
+        data =  data.concat(response.newsModels);
+        this.dataSource.data = data;
+        this.totalRecords = response.recordCount;
+        this.inProgress =  false;
       },
       error: (error: any) => {
         console.log(error)
@@ -58,16 +61,7 @@ export class AppComponent {
     this.loadNews();
   }
 
-  onSearch() {
-    if(this.searchText !== this.oldSearchText){
-      this.renderPage(1);
-      this.oldSearchText = this.searchText;
-    }
-  }
-
-  renderPage(event: number) {
-    this.pageNumber = event;
-    this.topHeadlinesData = [];
-    this.loadNews();
+  public onSearch = (value: string) => {
+    this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 }

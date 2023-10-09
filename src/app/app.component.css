@@ -3,17 +3,4 @@
     overflow-y: auto;
 }
 
-  td:nth-child(1) {
-    width: 40% !important;
-}
-
-td:nth-child(2) {
-    width: 60% !important;
-}
-th:nth-child(1) {
-    width: 40% !important;
-}
-
-th:nth-child(2) {
-    width: 60% !important;
-}
+  
